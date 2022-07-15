@@ -4,22 +4,18 @@ services:
 
   db:
     image: postgres:12.11-alpine3.16 # needs 12.11 version due to depencency on etl.py
-    container_name: db
+    container_name: postgresql
     restart: always
     environment:
-      - POSTGRES_HOST=db
+      - POSTGRES_HOST=localhost
       - POSTGRES_USER=renan
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=olist_db
     ports:
       - "5432:5432"
-    expose:
-      - "5432"
     volumes:
-      - data:/var/lib/postgresql/data
+      - data:/var/lib/postgresql/data/
       - ./database/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-    networks:
-      - olist_network
 
   etl:
     build: ./etl
@@ -28,26 +24,7 @@ services:
     depends_on:
       - db
     volumes:
-      # - data:/var/lib/postgresql/data
-      - type: bind
-        source: ${PWD}/raw_data
-        target: /var/lib/postgresql/data/raw_data
-      - type: volume
-        source: data
-        target: /var/lib/postgresql/data/raw_data
-    networks:
-      - olist_network
-
-networks:
-  olist_network:
-    # external: true
-    name: olist_network
-    driver: bridge
-
+      - ./raw_data:/var/lib/postgresql/data
 
 volumes:
   data:
-    # driver_opts:
-    #   o: bind
-    #   type: none
-    #   device: /Users/renan/Projects/olist-csv2postgres-docker-etl/raw_data
