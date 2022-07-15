@@ -99,13 +99,8 @@ def main():
     conn = connect(param_dict)
 
     # Copy data to DB
-
-    # How to access the mountpoint for the local volume?
-    # file_path = "/var/lib/docker/volumes/olist-csv2postgres-docker-etl_data/_data/raw_data"
-
-
     for file, table in zip(file_names, tables):
-        df = pd.read_csv(f"{file_path}/{file}", sep=",")
+        df = pd.read_csv(f"raw_data/{file}", sep=",")
         copy_from_string(conn, df, table)
 
     # Close connection
