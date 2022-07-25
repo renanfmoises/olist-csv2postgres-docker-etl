@@ -20,12 +20,11 @@ black:
 clean:
 	@rm -f */version.txt
 	@rm -f .coverage
-	@rm -f .DS_Store
 	@rm -fr */*/__pycache__ */__pycache__ */*.pyc __pycache__
 	@rm -fr build dist
 	@rm -fr *.dist-info
 	@rm -fr *.egg-info */*.egg-info
-	@rm -fr */.ipynb_checkpoints */*.ipynb_checkpoints
+	@rm -fr .ipynb_checkpoints */.ipynb_checkpoints */*.ipynb_checkpoints
 
 install:
 	@pip install . -U
@@ -41,11 +40,3 @@ count_lines:
 	@find ./ -name '*.py' -exec  wc -l {} \; | sort -n| awk \
         '{printf "%4s %s\n", $$1, $$2}{s+=$$0}END{print s}'
 	@echo ''
-
-create_tables:
-	@python create_tables.py
-
-run_etl:
-	@python etl.py
-
-create_and_etl: create_tables run_etl
