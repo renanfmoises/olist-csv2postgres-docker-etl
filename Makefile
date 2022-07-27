@@ -25,6 +25,7 @@ clean:
 	@rm -fr *.dist-info
 	@rm -fr *.egg-info */*.egg-info
 	@rm -fr .ipynb_checkpoints */.ipynb_checkpoints */*.ipynb_checkpoints
+	@rm .DS_Store
 
 install:
 	@pip install . -U
