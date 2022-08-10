@@ -1,29 +1,37 @@
-version: "3.7"
+version: "3.8"
 
 services:
+
   db:
     container_name: db
-    image: postgres:14.4-alpine3.16
+    image: postgres:14.4-alpine3.16 # needs 12.11 version due to depencency on etl.py
+    # image: postgres:12.11-alpine3.16 # needs 12.11 version due to depencency on etl.py
     restart: always
     environment:
       - POSTGRES_HOST=localhost
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=olist_db
-    ports:
-      - "5432:5432"
     volumes:
-      # Use mount volume to share the data between containers
       - data:/raw_data
-      # Load starting sql script into the database.
       - ./database/1-create_tables.sql:/docker-entrypoint-initdb.d/1-create_tables.sql
       - ./database/2-copy_from_csv.sql:/docker-entrypoint-initdb.d/2-copy_from_csv.sql
+    ports:
+      - "5432:5432"
 
-# create volume named "data" and mount it to /raw_data
 volumes:
   data:
+    name: data
     driver: local
     driver_opts:
-      device: ${PWD}/raw_data
       o: bind
       type: none
+      device: ${PWD}/raw_data
+
+  # initdb:
+  #   driver: local
+  #   driver_opts:
+  #     o: bind
+  #     type: none
+  #     device: ${PWD}/database
+
